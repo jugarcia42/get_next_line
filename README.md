@@ -1,55 +1,54 @@
 # Get Next Line
 
-## Descripción
+## About
 
-Get Next Line es un proyecto cuyo objetivo es implementar una función capaz de leer un archivo o una entrada y devolver una línea completa cada vez que es llamada.
+Get Next Line is a project from the 42 School curriculum that focuses on file descriptor management and buffered reading. The objective is to implement a function capable of reading a file, standard input, or any valid file descriptor line by line, regardless of the size of the file or the number of calls made.
 
-Este proyecto permite comprender el funcionamiento de los file descriptors, la lectura de archivos mediante buffers y la gestión de memoria dinámica en C.
+This project provides a deeper understanding of static variables, memory allocation, file descriptors, and efficient input handling in C.
 
-## Función principal
+## The Challenge
+
+The goal is to implement the following function:
 
 ```c
 char *get_next_line(int fd);
 ```
 
-La función devuelve la siguiente línea disponible del archivo asociado al descriptor `fd`, incluyendo el carácter de salto de línea (`\n`) cuando existe.
+Each call to `get_next_line()` must return the next line read from the given file descriptor, including the newline character (`\n`) when present. Once the end of the file is reached, the function must return `NULL`.
 
-Cada llamada sucesiva devuelve la siguiente línea hasta llegar al final del archivo.
+The implementation must handle partial reads, manage internal buffers correctly, and work efficiently with different file sizes.
 
-## Conceptos trabajados
+## Features
 
-- File descriptors
-- Lectura de archivos con `read`
-- Buffers
-- Memoria dinámica
-- Variables estáticas
-- Gestión de cadenas
-- Manejo de errores
+- Reads from any valid file descriptor.
+- Returns one line per function call.
+- Handles files of any size.
+- Supports standard input reading.
+- Efficient buffer management.
+- Preserves unread data between calls.
+- Proper memory allocation and cleanup.
+- Bonus support for multiple file descriptors simultaneously.
 
-## Compilación
+## Usage
 
-Para compilar el proyecto:
+Compile the project:
 
 ```bash
 make
 ```
 
-### Reglas disponibles
+Include the header in your source code:
 
-```bash
-make
-make clean
-make fclean
-make re
+```c
+#include "get_next_line.h"
 ```
 
-## Uso
-
-### Ejemplo
+Example:
 
 ```c
 #include "get_next_line.h"
 #include <fcntl.h>
+#include <stdio.h>
 
 int main(void)
 {
@@ -67,29 +66,74 @@ int main(void)
 }
 ```
 
-## Funcionamiento
+## Project Structure
 
-La función:
+```text
+get_next_line/
+├── get_next_line.c
+├── get_next_line_utils.c
+├── get_next_line.h
+├── Makefile
+└── README.md
+```
 
-1. Lee datos desde un descriptor de archivo utilizando un buffer de tamaño `BUFFER_SIZE`.
-2. Almacena temporalmente la información leída.
-3. Extrae una línea completa.
-4. Conserva los datos restantes para la siguiente llamada.
-5. Continúa hasta alcanzar el final del archivo.
+## Compilation
 
-## Gestión de errores
+Available Makefile rules:
 
-La función devuelve `NULL` cuando:
+```bash
+make
+make clean
+make fclean
+make re
+```
 
-- Se alcanza el final del archivo.
-- El descriptor de archivo es inválido.
-- Se produce un error durante la lectura.
-- Falla una reserva de memoria.
+The compilation generates the object files required for integration into other projects.
 
-## Objetivo
+## How It Works
 
-El objetivo principal es aprender a gestionar lecturas parciales de archivos y mantener información entre llamadas a una función utilizando memoria dinámica y variables estáticas.
+### Reading Data
 
-## Autor
+The function reads data from the file descriptor using the `read()` system call and stores it in an internal buffer.
 
-Proyecto realizado como parte del programa de formación de 42.
+### Buffer Management
+
+A static variable is used to preserve any unread data between function calls, allowing the function to continue exactly where it left off.
+
+### Line Extraction
+
+The stored buffer is searched for a newline character. When one is found, the corresponding line is extracted and returned while the remaining data is kept for future calls.
+
+### End of File
+
+When no more data can be read and all buffered content has been returned, the function returns `NULL`.
+
+## Bonus Part
+
+The bonus version supports reading from multiple file descriptors simultaneously by maintaining independent buffers for each descriptor.
+
+This allows the program to alternate calls between different files without losing any state.
+
+## Learning Objectives
+
+Through this project, I gained experience with:
+
+- File descriptor management.
+- Static variables.
+- Dynamic memory allocation.
+- Buffer handling.
+- String manipulation.
+- Efficient input processing.
+- Resource management.
+- Low-level file operations.
+
+## Technologies
+
+- C
+- Unix/Linux System Calls
+- File Descriptors
+- Dynamic Memory Management
+- Makefile
+
+
+Developed as part of the 42 School curriculum.
